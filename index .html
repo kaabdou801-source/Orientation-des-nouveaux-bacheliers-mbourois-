@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orientation des nouveaux bacheliers – AERCM Mbour</title>
+<style>
+:root{--bg:#f4f8f3;--card:#fff;--tx:#17301c;--mut:#5a6e5e;--bd:#d5e2d3;--pri:#1f7a3a;--onpri:#fff;--fat:#b45309;--kao:#1f7a3a;--kaf:#1d4ed8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1a12;--card:#18271c;--tx:#e8f3ea;--mut:#9db3a1;--bd:#2c4332;--pri:#4ade80;--onpri:#08210f;--fat:#fbbf24;--kao:#4ade80;--kaf:#7aa7ff}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1a12;--card:#18271c;--tx:#e8f3ea;--mut:#9db3a1;--bd:#2c4332;--pri:#4ade80;--onpri:#08210f;--fat:#fbbf24;--kao:#4ade80;--kaf:#7aa7ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.45rem;line-height:1.25;margin:4px 0 6px}
+p.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+label:first-child{margin-top:0}
+input{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+input:focus{outline:2px solid var(--pri);outline-offset:1px}
+.sug{margin-top:6px;border:1px solid var(--bd);border-radius:10px;overflow:hidden;max-height:240px;overflow-y:auto}
+.sug button{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+.sug button:last-child{border-bottom:0}
+.sug small{display:block;color:var(--mut)}
+.res{border-left:6px solid var(--pri);display:none}
+.res .lab{color:var(--mut);font-size:.9rem}
+.res .campus{font-size:1.6rem;font-weight:800;margin:2px 0}
+.btn{display:inline-block;width:100%;padding:13px;border:0;border-radius:10px;background:var(--pri);color:var(--onpri);font:inherit;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;margin-top:14px}
+.btn:disabled{opacity:.5}
+.ok{color:var(--pri);font-weight:600;margin-top:10px}
+.warn{color:var(--mut);margin-top:10px;font-size:.95rem}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tabs button{padding:6px 12px;border:1px solid var(--bd);border-radius:20px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+.tabs button.on{background:var(--pri);color:var(--onpri);border-color:var(--pri)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.hidden{display:none}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--bd);border-radius:10px;margin-top:8px;font-weight:500;cursor:pointer}.opt input{width:auto;margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Bienvenue, nouveau bachelier de Mbour 🎓</h1>
+  <p class="sub">Amicale AERCM · Entre ta filière pour savoir dans quel campus de l’USSEIN tu es orienté.</p>
+
+  <div class="card">
+    <label for="f">Ta filière (licence)</label>
+    <input id="f" type="text" placeholder="Ex. : Aquaculture, Histoire, Agro TIC…" autocomplete="off">
+    <div id="sug" class="sug hidden"></div>
+  </div>
+
+  <div id="res" class="card res">
+    <div class="lab">Tu es orienté au</div>
+    <div class="campus" id="rc"></div>
+    <div id="rl"></div>
+    <div class="lab" id="ru"></div>
+  </div>
+
+  <div id="reg" class="card hidden">
+    <label for="n">Nom complet</label>
+    <input id="n" type="text" autocomplete="name">
+    <label for="t">Téléphone / WhatsApp</label>
+    <input id="t" type="tel" autocomplete="tel">
+    <label for="e">Adresse e-mail</label>
+    <input id="e" type="email" autocomplete="email">
+    <label>Ton choix</label>
+    <label class="opt"><input type="radio" name="c" value="Rejoint l’amicale"><span>Je veux entrer dans l’amicale</span></label>
+    <label class="opt"><input type="radio" name="c" value="Résidence personnelle"><span>J’ai une résidence personnelle (je n’entre pas dans l’amicale)</span></label>
+    <button class="btn" id="go">Je m’inscris à l’amicale</button>
+    <div id="st"></div>
+  </div>
+
+</main>
+
+<script>
+const F=[
+["Agriculture Biologique et Écologique","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Productions Horticoles et Travaux Paysagers","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Protection phytosanitaire","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Production de Semences et Plants","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Agroforesterie","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Foresterie","Kaolack","UFR Sciences et Techniques Agronomie et Production Végétale"],
+["Environnement et Développement durable","Kaolack","UFR Environnement, Biodiversité et Développement Durable"],
+["Aménagement et Gestion des Aires Protégées","Kaolack","UFR Environnement, Biodiversité et Développement Durable"],
+["Télédétection et Climatologie","Kaolack","UFR Environnement, Biodiversité et Développement Durable"],
+["Développement Durable","Kaolack","UFR Environnement, Biodiversité et Développement Durable"],
+["Transformation Agroalimentaire","Kaolack","UFR Sciences et Technologies Alimentaires"],
+["Transformation des Ressources Agricoles et Animales Non Alimentaires","Kaolack","UFR Sciences et Technologies Alimentaires"],
+["Nutrition et Sciences des Aliments","Kaolack","UFR Nutrition et Alimentation"],
+["Nutrition Humaine et Diététique","Kaolack","UFR Nutrition et Alimentation"],
+["Énergies Renouvelables et Froid","Kaolack","UFR Hydraulique, Génie Rural, Machinisme et Énergies Renouvelables"],
+["Aménagement Hydro agricole, Systèmes d’irrigation, Hydraulique et Assainissement","Kaolack","UFR Hydraulique, Génie Rural, Machinisme et Énergies Renouvelables"],
+["Agroéquipements","Kaolack","UFR Hydraulique, Génie Rural, Machinisme et Énergies Renouvelables"],
+["Agro TIC","Kaolack","UFR Sciences Fondamentales et Appliquées"],
+["Mathématiques, Physiques, Informatique","Kaolack","UFR Sciences Fondamentales et Appliquées"],
+["Pêche","Fatick","UFR Gestion des Ressources Halieutiques, Pêche et Aquaculture"],
+["Aquaculture","Fatick","UFR Gestion des Ressources Halieutiques, Pêche et Aquaculture"],
+["Hôtellerie, Restauration et Gastronomie","Fatick","UFR Tourisme, Hôtellerie et Gastronomie"],
+["Production Touristique et Management Culturel","Fatick","UFR Tourisme, Hôtellerie et Gastronomie"],
+["Commerce des Produits Agricoles et Forestiers","Fatick","UFR Sciences Économiques, de Gestion et Commerce / Sciences Juridiques et Politiques"],
+["Administration des Affaires Maritimes","Fatick","UFR Sciences Économiques, de Gestion et Commerce / Sciences Juridiques et Politiques"],
+["Droit de l’Environnement et du Foncier","Fatick","UFR Sciences Économiques, de Gestion et Commerce / Sciences Juridiques et Politiques"],
+["Économie, Gestion et Finance Rurale","Fatick","UFR Sciences Économiques, de Gestion et Commerce / Sciences Juridiques et Politiques"],
+["Management des Entreprises Agricoles et Agroalimentaires","Fatick","UFR Sciences Économiques, de Gestion et Commerce / Sciences Juridiques et Politiques"],
+["Qualité des Denrées Alimentaires d’Origine Animale","Kaffrine","UFR Sciences et Techniques d’Élevage"],
+["Zootechnie et santé animale","Kaffrine","UFR Sciences et Techniques d’Élevage"],
+["Communication pour le Développement","Kaffrine","UFR Sciences Sociales"],
+["Conseil Agro-Sylvo Pastoral et Halieutique","Kaffrine","UFR Sciences Sociales"],
+["Management des Organisations Paysannes","Kaffrine","UFR Sciences Sociales"],
+["Socio-Anthropologie du Développement Local","Kaffrine","UFR Sciences Sociales"],
+["Histoire","Kaffrine","UFR Sciences Sociales"]
+].map(([n,c,u])=>({n,c,u}));
+const $=id=>document.getElementById(id);
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g," ");
+let sel=null;
+
+function pick(x){
+  sel=x;$("f").value=x.n;$("sug").classList.add("hidden");
+  $("rc").textContent="Campus de "+x.c;
+  $("rl").textContent=x.n;$("ru").textContent=x.u;
+  $("res").style.display="block";$("reg").classList.remove("hidden");$("st").innerHTML="";
+}
+$("f").addEventListener("input",()=>{
+  sel=null;$("res").style.display="none";$("reg").classList.add("hidden");
+  const q=norm($("f").value.trim());const s=$("sug");
+  if(!q){s.classList.add("hidden");return}
+  const m=F.filter(x=>norm(x.n).includes(q)||norm(x.u).includes(q)).slice(0,8);
+  s.innerHTML="";
+  if(!m.length){s.innerHTML='<div style="padding:10px 12px;color:var(--mut)">Aucune filière trouvée. Essaie un autre mot.</div>'}
+  m.forEach(x=>{const b=document.createElement("button");b.type="button";b.textContent=x.n;
+    const sm=document.createElement("small");sm.textContent="Campus de "+x.c;b.appendChild(sm);
+    b.onclick=()=>pick(x);s.appendChild(b)});
+  s.classList.remove("hidden");
+});
+
+const SCRIPT_URL="COLLE_ICI_L_URL_APPS_SCRIPT";
+$("go").onclick=async()=>{
+  const nom=$("n").value.trim(),tel=$("t").value.trim(),email=$("e").value.trim();
+  const st=$("st");const r=document.querySelector('input[name="c"]:checked');const choix=r?r.value:"";
+  if(!sel||!nom||!tel||!choix||!/^\S+@\S+\.\S+$/.test(email)){st.innerHTML='<div class="warn">Remplis ton nom, ton téléphone, une adresse e-mail valide et ton choix.</div>';return}
+  $("go").disabled=true;
+  try{
+    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({nom,tel,email,filiere:sel.n,campus:sel.c,choix})});
+    st.innerHTML='<div class="ok"></div>';
+    st.firstChild.textContent="✅ Inscription enregistrée. Un e-mail de bienvenue a été envoyé à "+email+" (pense à vérifier tes spams).";
+  }catch(e){
+    $("go").disabled=false;
+    const msg="Nouveau bachelier AERCM : "+nom+" – "+tel+" – "+email+" – "+sel.n+" – Campus de "+sel.c+" – "+choix;
+    st.innerHTML='<div class="warn">Un problème est survenu. Envoie ton inscription dans le groupe WhatsApp :</div>';
+    const a=document.createElement("a");a.className="btn";a.target="_blank";a.rel="noopener";
+    a.href="https://wa.me/?text="+encodeURIComponent(msg);a.textContent="Envoyer sur WhatsApp";st.appendChild(a);
+  }
+};
+</script>
+</body>
+</html>
